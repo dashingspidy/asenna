@@ -1,0 +1,9 @@
+<%= form_with model: brand, url: brands_path, method: :post, data: { turbo_frame: "brand-form" } do |form| %>
+  <div class="form-container">
+    <%= render partial: "layouts/form_error", locals: { object: brand } %>
+    <fieldset>
+      <%= form.text_field :name, class: "input input-bordered w-full #{brand.errors[:name].any? ? 'input-error' : ''}" %>
+      <%= form.submit "Add brand", class: "btn btn-primary mt-4" %>
+    </fieldset>
+  </div>
+<% end %>

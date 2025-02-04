@@ -1,0 +1,13 @@
+<!-- Show success message inside modal -->
+<turbo-stream action="update" target="brand-success-message">
+  <template>
+    <div class="alert alert-success">Brand created successfully!</div>
+  </template>
+</turbo-stream>
+
+<!-- Reset the form -->
+<turbo-stream action="replace" target="brand-form">
+  <template>
+    <%= render partial: "brands/form", formats: :html, locals: { brand: Brand.new } %>
+  </template>
+</turbo-stream>

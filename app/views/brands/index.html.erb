@@ -1,0 +1,18 @@
+<!-- Button to Open Modal -->
+<button class="btn btn-primary" onclick="brand_modal.showModal()">Add Brand</button>
+
+<dialog id="brand_modal" class="modal">
+  <div class="modal-box">
+    <h3 class="text-lg font-bold mb-4">Add New Brand</h3>
+    <form method="">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onclick="brand_modal.closeModal()">✕</button>
+    </form>
+    <!-- Success Message (Initially Hidden) -->
+    <div id="brand-success-message"></div>
+
+    <!-- Turbo Frame for the Form -->
+    <turbo-frame id="brand-form">
+      <%= render "form", brand: @brand %>
+    </turbo-frame>
+  </div>
+</dialog>

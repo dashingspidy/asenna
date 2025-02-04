@@ -10,7 +10,41 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_03_152630) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_04_145806) do
+  create_table "brands", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "inventories", force: :cascade do |t|
+    t.integer "quantity", null: false
+    t.string "location"
+    t.integer "product_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_inventories_on_product_id"
+  end
+
+  create_table "product_suppliers", force: :cascade do |t|
+    t.integer "product_id", null: false
+    t.integer "supplier_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_product_suppliers_on_product_id"
+    t.index ["supplier_id"], name: "index_product_suppliers_on_supplier_id"
+  end
+
+  create_table "products", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "description"
+    t.decimal "price"
+    t.integer "brand_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["brand_id"], name: "index_products_on_brand_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "ip_address"
@@ -18,6 +52,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_03_152630) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
+  create_table "suppliers", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "email"
+    t.integer "phone", null: false
+    t.integer "brand_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["brand_id"], name: "index_suppliers_on_brand_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -28,5 +72,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_03_152630) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "inventories", "products"
+  add_foreign_key "product_suppliers", "products"
+  add_foreign_key "product_suppliers", "suppliers"
+  add_foreign_key "products", "brands"
   add_foreign_key "sessions", "users"
+  add_foreign_key "suppliers", "brands"
 end
