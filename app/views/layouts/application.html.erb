@@ -23,7 +23,14 @@
   </head>
 
   <body>
-    <%= render partial: "layouts/sidenav" %>
-    <%= render partial: "layouts/footer" %>
+    <%= render partial: "layouts/flash" %>
+    <% if Current.user %>
+      <%= render partial: "layouts/sidenav" %>
+      <%= render partial: "layouts/footer" %>
+    <% else %>
+      <main>
+        <%= yield %>
+      </main>
+    <% end %>
   </body>
 </html>
