@@ -1,3 +1,23 @@
-<section class="max-w-70">
-  <%= render "form", brand: @brand %>
-</section>
+<div class="grid grid-cols-2 gap-4 p-4">
+  <section class="max-w-70 mt-4">
+    <%= render "form", brand: @brand %>
+  </section>
+  <section>
+    <div class="overflow-x-auto">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Brand Name</th>
+          </tr>
+        </thead>
+          <tbody>
+            <% @brands.each do |brand| %>
+              <tr>
+                <td><%= brand.name %></td>
+              </tr>
+            <% end %>
+          </tbody>
+      </table>
+    </div>
+  </section>
+</div>
