@@ -1,0 +1,17 @@
+<%= form_with model: product, url: products_path, method: :post do |form| %>  
+  <fieldset class="fieldset">
+    <%= form.collection_select :brand_id, Brand.order(:name), :id, :name, {prompt: true}, { class: "select w-full" } %>
+  </fieldset>
+  <fieldset class="fieldset">
+    <%= form.text_field :name, placeholder: "Enter Product name", class: "input w-full #{product.errors[:name].any? ? 'input-error' : ''}" %>
+  </fieldset>
+  <fieldset class="fieldset">
+    <%= form.textarea :description, placeholder: "Enter Product description", class: "textarea w-full #{product.errors[:description].any? ? 'textarea-error' : ''}" %>
+  </fieldset>
+  <fieldset class="fieldset">
+    <%= form.number_field :price, placeholder: "Enter Product price", step: 0.5, class: "input w-full #{product.errors[:price].any? ? 'input-error' : ''}" %>
+  </fieldset>
+  <fieldset class="fieldset">
+    <%= form.submit "Add", class: "btn btn-primary mt-4" %>
+  </fieldset>
+<% end %>

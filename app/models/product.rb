@@ -5,5 +5,5 @@ class Product < ApplicationRecord
   belongs_to :brand
 
   validates :name, presence: true
-  validates :price, numericality: { greater_than: 0 }, allow_nil: true
+  validates :price, presence: true, numericality: { greater_than: 0 }, allow_nil: true
 end

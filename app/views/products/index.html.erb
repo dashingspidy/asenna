@@ -1,0 +1,30 @@
+<div class="grid grid-cols-3 gap-10 p-4">
+  <section class="">
+    <h3 class="text-xl mb-2">Add new product</h3>
+    <%= render "form", product: @product %>
+  </section>
+  <section class="col-span-2">
+    <div class="overflow-x-auto">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Product Name</th>
+            <th>Product Price</th>
+            <th>Product Brand</th>
+          </tr>
+        </thead>
+          <tbody>
+            <% if @products.present? %>
+              <% @products.each do |product| %>
+                <tr>
+                  <td><%= product.name %></td>
+                  <td><%= number_to_currency product.price, locale: :bn %></td>
+                  <td><%= product.brand.name %></td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+      </table>
+    </div>
+  </section>
+</div>

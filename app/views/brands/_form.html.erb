@@ -1,6 +1,8 @@
 <%= form_with model: brand, url: brands_path, method: :post do |form| %>  
-  <fieldset>
+  <fieldset class="fieldset">
     <%= form.text_field :name, placeholder: "Enter Brand name", class: "input input-bordered w-full #{brand.errors[:name].any? ? 'input-error' : ''}" %>
-    <%= form.submit "Add", class: "btn btn-primary mt-4" %>
+  </fieldset>
+  <fieldset class="fieldset">
+    <%= form.submit "Add", class: "btn btn-primary" %>
   </fieldset>
 <% end %>
