@@ -1,0 +1,32 @@
+<div class="grid grid-cols-3 gap-10 p-4">
+  <section class="">
+    <h3 class="text-xl mb-2">Add new supplier</h3>
+    <%= render "form", supplier: @supplier %>
+  </section>
+  <section class="col-span-2">
+    <div class="overflow-x-auto">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Supplier Name</th>
+            <th>Supplier Email</th>
+            <th>Supplier Phone number</th>
+            <th>Company</th>
+          </tr>
+        </thead>
+          <tbody>
+            <% if @suppliers.present? %>
+              <% @suppliers.each do %>
+                <tr>
+                  <td><%= it.name %></td>
+                  <td><%= it.email %></td>
+                  <td>0<%= it.phone %></td>
+                  <td><%= it.brand.name %></td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+      </table>
+    </div>
+  </section>
+</div>

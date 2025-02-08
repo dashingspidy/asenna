@@ -4,4 +4,5 @@ class Supplier < ApplicationRecord
   has_many :products, through: :product_suppliers
 
   validates_presence_of :name, :phone
+  validates_uniqueness_of :phone
 end

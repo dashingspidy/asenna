@@ -1,0 +1,17 @@
+<%= form_with model: supplier, url: suppliers_path, method: :post do |form| %>  
+  <fieldset class="fieldset">
+    <%= form.collection_select :brand_id, Brand.order(:name), :id, :name, {prompt: true}, { class: "select w-full" } %>
+  </fieldset>
+  <fieldset class="fieldset">
+    <%= form.text_field :name, placeholder: "Enter Supplier name", class: "input w-full #{supplier.errors[:name].any? ? 'input-error' : ''}" %>
+  </fieldset>
+  <fieldset class="fieldset">
+    <%= form.email_field :email, placeholder: "Enter Supplier email", class: "input w-full #{supplier.errors[:email].any? ? 'input-error' : ''}" %>
+  </fieldset>
+  <fieldset class="fieldset">
+    <%= form.phone_field :phone, placeholder: "Enter Supplier phone number", class: "input w-full #{supplier.errors[:phone].any? ? 'input-error' : ''}" %>
+  </fieldset>
+  <fieldset class="fieldset">
+    <%= form.submit "Add", class: "btn btn-primary mt-4" %>
+  </fieldset>
+<% end %>

@@ -11,7 +11,7 @@ class ProductsController < ApplicationController
       redirect_to products_path
     else
       flash[:error] = @product.errors.full_messages.join(", ")
-      render :index, status: :unprocessable_entity
+      redirect_to products_path
     end
   end
 

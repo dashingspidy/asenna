@@ -11,7 +11,7 @@ class BrandsController < ApplicationController
       redirect_to brands_path
     else
       flash[:error] = @brand.errors.full_messages.join(", ")
-      render :index, status: :unprocessable_entity
+      redirect_to brands_path
     end
   end
 

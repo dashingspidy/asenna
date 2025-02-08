@@ -15,11 +15,11 @@
         </thead>
           <tbody>
             <% if @products.present? %>
-              <% @products.each do |product| %>
+              <% @products.each do %>
                 <tr>
-                  <td><%= product.name %></td>
-                  <td><%= number_to_currency product.price, locale: :bn %></td>
-                  <td><%= product.brand.name %></td>
+                  <td><%= it.name %></td>
+                  <td><%= number_to_currency it.price, locale: :bn %></td>
+                  <td><%= it.brand.name %></td>
                 </tr>
               <% end %>
             <% end %>
