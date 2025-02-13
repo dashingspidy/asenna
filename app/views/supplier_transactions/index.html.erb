@@ -21,7 +21,7 @@
                   <td><%= link_to it.supplier.name, supplier_transaction_path(it.supplier.id), class: "link" %></td>
                   <td><%= it.transaction_type.capitalize %></td>
                   <td><%= number_to_currency it.amount, locale: :bn %></td>
-                  <td><%= it.date %></td>
+                  <td><%= it.date.strftime("%d/%m/%Y") %></td>
                 </tr>
               <% end %>
             <% end %>

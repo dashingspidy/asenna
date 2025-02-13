@@ -21,7 +21,7 @@
                 <tr>
                   <td><%= it.transaction_type.capitalize %></td>
                   <td><%= number_to_currency it.amount, locale: :bn %></td>
-                  <td><%= it.date %></td>
+                  <td><%= it.date.strftime("%d/%m/%Y") %></td>
                 </tr>
               <% end %>
             <% end %>

@@ -1,4 +1,4 @@
-<div class="grid grid-cols-3 gap-10 p-4">
+<div class="grid grid-cols-2 gap-10 p-4">
   <section>
     <div class="card w-96 bg-base-100 card-xs shadow-sm">
       <div class="card-body">
@@ -20,7 +20,7 @@
                 <tr>
                   <td><%= it.transaction_type.capitalize %></td>
                   <td><%= it.quantity %></td>
-                  <td><%= it.created_at %></td>
+                  <td><%= it.created_at.strftime("%d/%m/%Y") %></td>
                 </tr>
               <% end %>
             <% end %>
