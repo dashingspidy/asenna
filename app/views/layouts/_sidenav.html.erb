@@ -18,7 +18,7 @@
       <li><%= link_to "Product", products_path, class: [ active_link(products_path) ] %></li>
       <li><%= link_to "Supplier", suppliers_path, class: [ active_link(suppliers_path) ] %></li>
       <li><%= link_to "Inventory", inventories_path, class: [ active_link(inventories_path) ] %></li>
-      <li><%= link_to "Accounting", "#" %></li>
+      <li><%= link_to "Accounting", supplier_transactions_path, class: [ active_link(supplier_transactions_path) ] %></li>
       <li class="mt-auto w-6 mb-2 ml-10">
         <div class="tooltip" data-tip="logout">
           <div class="tooltip-content">

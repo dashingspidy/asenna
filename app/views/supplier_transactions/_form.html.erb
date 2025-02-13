@@ -1,0 +1,17 @@
+<%= form_with model: supplier_transaction, url: supplier_transactions_path, method: :post do |form| %>  
+  <fieldset class="fieldset">
+    <%= form.collection_select :supplier_id, Supplier.order(:name), :id, :name, {prompt: true}, { class: "select w-full" } %>
+  </fieldset>
+  <fieldset class="fieldset">
+    <%= form.select :transaction_type, SupplierTransaction.transaction_types.keys, {prompt: true}, { class: "select w-full" } %>
+  </fieldset>
+  <fieldset class="fieldset">
+    <%= form.number_field :amount, placeholder: "Enter amount", class: "input w-full #{supplier_transaction.errors[:amount].any? ? 'input-error' : ''}" %>
+  </fieldset>
+  <fieldset class="fieldset">
+    <%= form.date_field :date, placeholder: "Enter date", class: "input w-full #{supplier_transaction.errors[:date].any? ? 'input-error' : ''}" %>
+  </fieldset>
+  <fieldset class="fieldset">
+    <%= form.submit "Add", class: "btn btn-primary mt-4" %>
+  </fieldset>
+<% end %>

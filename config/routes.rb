@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :products
   resources :suppliers
   resources :inventories
+  resources :supplier_transactions
   get "dashboard", to: "dashboard#index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

@@ -1,0 +1,32 @@
+<div class="grid grid-cols-3 gap-10 p-4">
+  <section class="">
+    <h3 class="text-xl mb-2">Add new transaction</h3>
+    <%= render "form", supplier_transaction: @transaction %>
+  </section>
+  <section class="col-span-2">
+    <div class="overflow-x-auto">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Supplier Name</th>
+            <th>Transaction Type</th>
+            <th>Amount</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+          <tbody>
+            <% if @transactions.present? %>
+              <% @transactions.each do %>
+                <tr>
+                  <td><%= link_to it.supplier.name, supplier_transaction_path(it.supplier.id), class: "link" %></td>
+                  <td><%= it.transaction_type.capitalize %></td>
+                  <td><%= number_to_currency it.amount, locale: :bn %></td>
+                  <td><%= it.date %></td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+      </table>
+    </div>
+  </section>
+</div>

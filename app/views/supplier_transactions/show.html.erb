@@ -1,0 +1,33 @@
+<div class="grid grid-cols-3 gap-10 p-4">
+
+  <section>
+    <div class="card w-96 bg-base-100 card-xs shadow-sm">
+      <div class="card-body">
+        <h2 class="card-title"><%= @supplier.name %> (<%= @supplier.brand.name %>)</h2>
+        <p class="text-xl">Total Due: <%= number_to_currency @supplier.total_due, locale: :bn %></p>
+      </div>
+    </div>
+    <div class="overflow-x-auto mt-4">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Transaction Type</th>
+            <th>Amount</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+          <tbody>
+            <% if @supplier.supplier_transactions.present? %>
+              <% @supplier.supplier_transactions.each do %>
+                <tr>
+                  <td><%= it.transaction_type.capitalize %></td>
+                  <td><%= number_to_currency it.amount, locale: :bn %></td>
+                  <td><%= it.date %></td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+      </table>
+    </div>
+  </section>
+</div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_04_145806) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_11_170635) do
   create_table "brands", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -54,6 +54,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_04_145806) do
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
+  create_table "supplier_transactions", force: :cascade do |t|
+    t.integer "supplier_id", null: false
+    t.string "transaction_type", null: false
+    t.decimal "amount", null: false
+    t.date "date", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["supplier_id"], name: "index_supplier_transactions_on_supplier_id"
+  end
+
   create_table "suppliers", force: :cascade do |t|
     t.string "name", null: false
     t.string "email"
@@ -77,5 +87,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_04_145806) do
   add_foreign_key "product_suppliers", "suppliers"
   add_foreign_key "products", "brands"
   add_foreign_key "sessions", "users"
+  add_foreign_key "supplier_transactions", "suppliers"
   add_foreign_key "suppliers", "brands"
 end
