@@ -18,7 +18,7 @@
             <% if @inventories.present? %>
               <% @inventories.each do %>
                 <tr>
-                  <td><%= it.product.name %></td>
+                  <td><%= link_to it.product.name, inventory_path(it.product.id), class: "link" %></td>
                   <td><%= it.quantity %></td>
                   <td><%= it.location %></td>
                   <td><%= it.product.brand.name %></td>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_11_170635) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_13_050852) do
   create_table "brands", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -54,6 +54,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_11_170635) do
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
+  create_table "stock_transactions", force: :cascade do |t|
+    t.integer "inventory_id", null: false
+    t.string "transaction_type"
+    t.integer "quantity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["inventory_id"], name: "index_stock_transactions_on_inventory_id"
+  end
+
   create_table "supplier_transactions", force: :cascade do |t|
     t.integer "supplier_id", null: false
     t.string "transaction_type", null: false
@@ -87,6 +96,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_11_170635) do
   add_foreign_key "product_suppliers", "suppliers"
   add_foreign_key "products", "brands"
   add_foreign_key "sessions", "users"
+  add_foreign_key "stock_transactions", "inventories"
   add_foreign_key "supplier_transactions", "suppliers"
   add_foreign_key "suppliers", "brands"
 end

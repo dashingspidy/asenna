@@ -13,12 +13,21 @@ class InventoriesController < ApplicationController
     end
 
     if @inventory.save
+      StockTransaction.create!(
+        inventory: @inventory,
+        transaction_type: "stock_in",
+        quantity: inventory_params[:quantity].to_i
+      )
       flash[:success] = "Product Stock added."
       redirect_to inventories_path
     else
       flash[:error] = @inventory.errors.full_messages.join(", ")
       redirect_to inventories_path
     end
+  end
+
+  def show
+    @stocks = Inventory.find(params[:id])
   end
 
   private
