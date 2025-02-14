@@ -1,0 +1,50 @@
+<% if cart.present? %>
+  <div class="overflow-x-auto">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% cart.each do |product_id, details| %>
+          <tr>
+            <td><%= details["name"] %></td>
+            <td><%= details["quantity"] %></td>
+            <td><%= number_to_currency(details["price"], locale: :bn) %></td>
+            <td>
+              <%= button_to remove_cart_path(product_id: product_id),
+                  method: :delete,
+                  class: "btn btn-error btn-sm",
+                  data: { turbo: true } do %>
+                Remove
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2" class="font-bold">Total:</td>
+          <td colspan="2" class="font-bold">
+            <%= number_to_currency(cart.sum { |_, details| details["price"].to_f * details["quantity"].to_i }, locale: :bn) %>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <%= button_to checkout_cart_path,
+      method: :post,
+      class: "btn btn-primary w-full mt-4" do %>
+    Proceed to Checkout
+  <% end %>
+<% else %>
+  <div class="alert alert-info">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    <span>Your cart is empty.</span>
+  </div>
+<% end %>

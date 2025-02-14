@@ -6,6 +6,12 @@ Rails.application.routes.draw do
   resources :suppliers
   resources :inventories
   resources :supplier_transactions
+  resource :cart, only: [ :show ], controller: :cart do
+    post :add
+    delete :remove
+    post :checkout
+    get :search
+  end
   get "dashboard", to: "dashboard#index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_13_050852) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_13_132353) do
   create_table "brands", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -43,6 +43,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_13_050852) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["brand_id"], name: "index_products_on_brand_id"
+  end
+
+  create_table "sale_items", force: :cascade do |t|
+    t.integer "sale_id", null: false
+    t.integer "product_id", null: false
+    t.integer "quantity"
+    t.decimal "price"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_sale_items_on_product_id"
+    t.index ["sale_id"], name: "index_sale_items_on_sale_id"
+  end
+
+  create_table "sales", force: :cascade do |t|
+    t.decimal "total_price"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -95,6 +112,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_13_050852) do
   add_foreign_key "product_suppliers", "products"
   add_foreign_key "product_suppliers", "suppliers"
   add_foreign_key "products", "brands"
+  add_foreign_key "sale_items", "products"
+  add_foreign_key "sale_items", "sales"
   add_foreign_key "sessions", "users"
   add_foreign_key "stock_transactions", "inventories"
   add_foreign_key "supplier_transactions", "suppliers"
