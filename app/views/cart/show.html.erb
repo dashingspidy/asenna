@@ -16,11 +16,15 @@
                         controller: "search",
                         action: "input->search#submit"
                       } do |f| %>
-          <%= f.text_field :query, 
-              class: "input input-bordered w-full",
-              placeholder: "Type to search products..."
-          %>
-          <%= f.submit "Search", class: "btn" %>
+          <div class="fieldset">
+            <div class="join">
+              <%= f.text_field :query, 
+                  class: "input input-bordered w-full rounded",
+                  placeholder: "Type to search products..."
+              %>
+              <%= f.submit "Search", class: "btn rounded ml-2" %>
+            </div>
+          </div>
         <% end %>
         <%= turbo_frame_tag "search" do %>
           <%= render "cart/search_results", products: @products %>
@@ -32,7 +36,7 @@
       <div class="card-body">
         <h2 class="card-title mb-4">Your Cart</h2>
         <%= turbo_frame_tag "add-cart" do %>
-          <%= render "cart/cart_items", cart: @cart %>
+          <%= render "cart/cart_items", cart: @cart, cart_discount: @cart_discount, payment_method: @payment_method %>
         <% end %>
       </div>
     </div>

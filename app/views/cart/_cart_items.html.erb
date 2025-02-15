@@ -6,15 +6,37 @@
           <th>Product</th>
           <th>Quantity</th>
           <th>Price</th>
+          <th>Subtotal</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
+        <% subtotal = 0 %>
         <% cart.each do |product_id, details| %>
           <tr>
             <td><%= details["name"] %></td>
-            <td><%= details["quantity"] %></td>
+            <td>
+              <%= form_with url: update_quantity_cart_path, method: :patch, data: { controller: "cart", turbo_frame: "add-cart" } do |f| %>
+                <%= f.hidden_field :product_id, value: product_id %>
+                <%= f.number_field :quantity, 
+                    value: details["quantity"], 
+                    min: 1,
+                    class: "input input-bordered input-sm w-20",
+                    data: { 
+                      action: "change->cart#submitForm"
+                    } %>
+              <% end %>
+            </td>
             <td><%= number_to_currency(details["price"], locale: :bn) %></td>
+            <td>
+              <% 
+                price = details["price"].to_f
+                quantity = details["quantity"].to_i
+                item_total = price * quantity
+                subtotal += item_total
+              %>
+              <%= number_to_currency(item_total, locale: :bn) %>
+            </td>
             <td>
               <%= button_to remove_cart_path(product_id: product_id),
                   method: :delete,
@@ -28,22 +50,50 @@
       </tbody>
       <tfoot>
         <tr>
-          <td colspan="2" class="font-bold">Total:</td>
+          <td colspan="3" class="text-right font-bold">Subtotal:</td>
           <td colspan="2" class="font-bold">
-            <%= number_to_currency(cart.sum { |_, details| details["price"].to_f * details["quantity"].to_i }, locale: :bn) %>
+            <%= number_to_currency(subtotal, locale: :bn) %>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3" class="text-right font-bold">
+            Discount:
+            <%= form_with url: update_cart_discount_cart_path, method: :patch, data: { controller: "cart", turbo_frame: "add-cart" }, class: "inline-block ml-2" do |f| %>
+              <%= f.number_field :discount, 
+                  value: (cart_discount || 0), 
+                  min: 0,
+                  max: 100,
+                  step: "0.1",
+                  class: "input input-bordered input-sm w-20",
+                  data: { 
+                    action: "change->cart#submitForm"
+                  } %>%
+            <% end %>
+          </td>
+          <td colspan="2" class="font-bold text-error">
+            -<%= number_to_currency(subtotal * (cart_discount || 0) / 100, locale: :bn) %>
+          </td>
+        </tr>
+        <tr class="text-lg">
+          <td colspan="3" class="text-right font-bold">Total:</td>
+          <td colspan="2" class="font-bold">
+            <%= number_to_currency(subtotal * (1 - (cart_discount || 0) / 100), locale: :bn) %>
           </td>
         </tr>
       </tfoot>
     </table>
   </div>
 
+  <%= render "cart/payment_method", payment_method: payment_method %>
+
   <%= button_to checkout_cart_path,
       method: :post,
-      class: "btn btn-primary w-full mt-4" do %>
-    Proceed to Checkout
+      class: "btn btn-primary w-full mt-4 #{payment_method.blank? ? 'btn-disabled' : ''}",
+      disabled: payment_method.blank? do %>
+    Proceed to Checkout <%= "(#{payment_method.titleize})" if payment_method.present? %>
   <% end %>
 <% else %>
-  <div class="alert alert-info">
+  <div class="alert">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
     <span>Your cart is empty.</span>
   </div>
