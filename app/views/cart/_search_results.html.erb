@@ -4,14 +4,19 @@
       <% products.each do |product| %>
         <div class="flex justify-between items-center p-3 hover:bg-base-200 rounded-lg">
           <div>
-            <h3 class="font-medium"><%= product.name %></h3>
-            <p class="text-primary"><%= number_to_currency(product.price, locale: :bn) %></p>
+            <h3 class="font-medium">Name: <%= product.name %> (<%= product.brand.name %>)</h3>
+            <p class="text-primary">Price: <%= number_to_currency(product.price, locale: :bn) %></p>
+            <p>Quantity: <span class="badge badge-info"><%= product.inventories.sum(:quantity) %></span></p>
           </div>
-          <%= button_to add_cart_path(product_id: product.id),
-              method: :post,
-              data: { turbo_frame: "add-cart"},
-              class: "btn btn-primary btn-sm" do %>
-            Add to Cart
+          <% if product.inventories.sum(:quantity) == 0 %>
+            <div class="badge badge-error">Out Of Stock</div>
+          <% else %>
+            <%= button_to add_cart_path(product_id: product.id),
+                method: :post,
+                data: { turbo_frame: "add-cart"},
+                class: "btn btn-primary btn-sm" do %>
+                Add to Cart
+            <% end %>
           <% end %>
         </div>
       <% end %>
