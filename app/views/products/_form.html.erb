@@ -1,15 +1,15 @@
 <%= form_with model: product do |form| %>  
   <fieldset class="fieldset">
-    <%= form.collection_select :brand_id, Brand.order(:name), :id, :name, {prompt: true}, { class: "select w-full" } %>
+    <%= form.collection_select :brand_id, Brand.order(:name), :id, :name, {prompt: "Select a company/brand"}, { class: "select w-full" } %>
   </fieldset>
   <fieldset class="fieldset">
-    <%= form.text_field :name, placeholder: "Enter Product name", class: "input w-full #{product.errors[:name].any? ? 'input-error' : ''}" %>
+    <%= form.text_field :name, placeholder: "Product name", class: "input w-full" %>
   </fieldset>
   <fieldset class="fieldset">
-    <%= form.textarea :description, placeholder: "Enter Product description", class: "textarea w-full #{product.errors[:description].any? ? 'textarea-error' : ''}" %>
+    <%= form.textarea :description, placeholder: "Notes", class: "textarea w-full" %>
   </fieldset>
   <fieldset class="fieldset">
-    <%= form.number_field :price, placeholder: "Enter Product price", step: 0.5, class: "input w-full #{product.errors[:price].any? ? 'input-error' : ''}" %>
+    <%= form.number_field :price, placeholder: "Product price", step: 0.5, class: "input w-full" %>
   </fieldset>
   <fieldset class="fieldset">
     <%= form.submit (product.persisted? ? "Update" : "Add"), class: "btn btn-primary mt-4" %>

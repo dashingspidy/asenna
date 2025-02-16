@@ -1,7 +1,9 @@
 <div class="grid grid-cols-3 gap-10 p-4">
-  <section class="">
-    <h3 class="text-xl mb-2"><%= @supplier.persisted? ? "Update Supplier" : "Add new supplier" %></h3>
-    <%= render "form", supplier: @supplier %>
+  <section class="card bg-base-100 shadow-sm">
+    <div class="card-body">
+      <h3 class="card-title"><%= @supplier.persisted? ? "Update Supplier" : "Add new supplier" %></h3>
+      <%= render "form", supplier: @supplier %>
+    </div>
   </section>
   <section class="col-span-2">
     <div class="overflow-x-auto">
@@ -18,10 +20,10 @@
             <% if @suppliers.present? %>
               <% @suppliers.each do %>
                 <tr>
-                  <td><%= link_to it.name, supplier_transaction_path(it), class: "link" %></td>
+                  <td class="capitalize"><%= link_to it.name, supplier_transaction_path(it), class: "link" %></td>
                   <td><%= it.email %></td>
                   <td>0<%= it.phone %></td>
-                  <td><%= it.brand.name %></td>
+                  <td class="uppercase"><%= it.brand.name %></td>
                   <td><%= link_to "Edit", edit_supplier_path(it), class: "btn" %></td>
                 </tr>
               <% end %>

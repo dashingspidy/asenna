@@ -1,6 +1,6 @@
 <%= form_with model: inventory, url: inventories_path, method: :post do |form| %>  
   <fieldset class="fieldset">
-    <%= form.collection_select :product_id, Product.order(:name), :id, :name, {prompt: true}, { class: "select w-full" } %>
+    <%= form.collection_select :product_id, Product.order(:name), :id, :name, {prompt: "Select product"}, { class: "select w-full" } %>
   </fieldset>
   <fieldset class="fieldset">
     <%= form.number_field :quantity, placeholder: "Quantity (Units)", class: "input w-full #{inventory.errors[:quantity].any? ? 'input-error' : ''}" %>

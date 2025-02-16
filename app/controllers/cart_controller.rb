@@ -4,6 +4,7 @@ class CartController < ApplicationController
     @cart_discount = session[:cart_discount] || 0
     @cart_items = load_cart_items
     @payment_method = session[:payment_method]
+    @products = Product.most_sold
   end
 
   def add
@@ -207,7 +208,7 @@ class CartController < ApplicationController
 
   def search
     query = params[:query].strip
-    @products = query.present? ? Product.joins(:inventories).where("LOWER(products.name) LIKE ?", "%#{query.downcase}%").distinct : Product.none
+    @products = query.present? ? Product.search_by_name(query) : Product.most_sold
     render :show, locals: { products: @products }
   end
 

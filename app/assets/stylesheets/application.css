@@ -18,6 +18,10 @@
   animation: fadeOut 5s forwards;
 }
 
+.menu-active .menu-icon {
+  filter: brightness(0) invert(1);
+}
+
 @keyframes fadeOut {
   0% {
     opacity: 1;

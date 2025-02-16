@@ -12,13 +12,41 @@
     <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
     <ul class="menu bg-base-200 text-base-content min-h-full w-44 p-4">
       <a class="text-xl mb-4">Asenna</a>
-      <li><%= link_to "Dashboard", dashboard_path, class: [ active_link(dashboard_path) ] %></li>
-      <li><%= link_to "Cart", cart_path, class: [ active_link(cart_path) ] %></li>
-      <li><%= link_to "Brand", brands_path, class: [ active_link(brands_path) ] %></li>
-      <li><%= link_to "Product", products_path, class: [ active_link(products_path) ] %></li>
-      <li><%= link_to "Supplier", suppliers_path, class: [ active_link(suppliers_path) ] %></li>
-      <li><%= link_to "Inventory", inventories_path, class: [ active_link(inventories_path) ] %></li>
-      <li><%= link_to "Accounting", supplier_transactions_path, class: [ active_link(supplier_transactions_path) ] %></li>
+      <li>
+        <%= link_to dashboard_path, class: [ active_link(dashboard_path) ] do %>
+          <%= image_tag "layout-dashboard.svg", class: "menu-icon" %> <span>Dashboard</span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to cart_path, class: [ active_link(cart_path) ] do %>
+          <%= image_tag "shopping-bag.svg", class: "menu-icon" %><span>Sell</span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to brands_path, class: [ active_link(brands_path) ] do %>
+          <%= image_tag "building-2.svg", class: "menu-icon" %><span>Brand</span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to products_path, class: [ active_link(products_path) ] do %>
+          <%= image_tag "notebook-tabs.svg", class: "menu-icon"%><span>Catalog</span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to suppliers_path, class: [ active_link(suppliers_path) ] do %>
+          <%= image_tag "truck.svg", class: "menu-icon" %><span>Supplier</span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to inventories_path, class: [ active_link(inventories_path) ] do %>
+          <%= image_tag "box.svg", class: "menu-icon" %><span>Inventory</span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to supplier_transactions_path, class: [ active_link(supplier_transactions_path) ] do %>
+          <%= image_tag "wallet.svg", class: "menu-icon" %><span>Bookkeeping</span>
+        <% end %>
+      </li>
       <li class="mt-auto w-6 mb-2 ml-10">
         <div class="tooltip" data-tip="logout">
           <div class="tooltip-content">

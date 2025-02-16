@@ -1,7 +1,9 @@
 <div class="grid grid-cols-3 gap-10 p-4">
-  <section class="">
-    <h3 class="text-xl mb-2">Add new product</h3>
-    <%= render "form", product: @product %>
+  <section class="card bg-base-100 shadow-sm">
+    <div class="card-body">
+      <h3 class="card-title"><%= @product.persisted? ? "Update Product" : "Add new product" %></h3>
+      <%= render "form", product: @product %>
+    </div>
   </section>
   <section class="col-span-2">
     <div class="overflow-x-auto">
@@ -17,9 +19,9 @@
             <% if @products.present? %>
               <% @products.each do %>
                 <tr>
-                  <td><%= it.name %></td>
+                  <td class="capitalize"><%= it.name %></td>
                   <td><%= number_to_currency it.price, locale: :bn %></td>
-                  <td><%= it.brand.name %></td>
+                  <td class="uppercase"><%= it.brand.name %></td>
                   <td><%= link_to "Edit", edit_product_path(it), class: "btn" %></td>
                 </tr>
               <% end %>

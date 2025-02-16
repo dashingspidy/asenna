@@ -4,9 +4,9 @@
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="card bg-base-100 shadow-xl">
+    <div class="card bg-base-100 shadow-sm">
       <div class="card-body">
-        <h2 class="card-title">Search Products</h2>
+        <h2 class="card-title">Catalog</h2>
         <%= form_with url: search_cart_path, 
                       method: :get, 
                       data: { 
@@ -25,13 +25,15 @@
             </div>
           </div>
         <% end %>
-        <%= turbo_frame_tag "search" do %>
-          <%= render "cart/search_results", products: @products %>
-        <% end %>
+        <div class="mt-4">
+          <%= turbo_frame_tag "search" do %>
+            <%= render "cart/search_results", products: @products %>
+          <% end %>
+        </div>
       </div>
     </div>
 
-    <div class="card bg-base-100 shadow-xl">
+    <div class="card bg-base-100 shadow-sm">
       <div class="card-body">
         <h2 class="card-title mb-4">Your Cart</h2>
         <%= turbo_frame_tag "add-cart" do %>

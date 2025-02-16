@@ -1,7 +1,9 @@
 <div class="grid grid-cols-3 gap-10 p-4">
-  <section class="">
-    <h3 class="text-xl mb-2">Add product stock</h3>
-    <%= render "form", inventory: @inventory %>
+  <section class="card bg-base-100 shadow-sm">
+    <div class="card-body">
+      <h3 class="card-title">Add product stock</h3>
+      <%= render "form", inventory: @inventory %>
+    </div>
   </section>
   <section class="col-span-2">
     <div class="overflow-x-auto">
@@ -18,10 +20,10 @@
             <% if @inventories.present? %>
               <% @inventories.each do %>
                 <tr>
-                  <td><%= link_to it.product.name, inventory_path(it), class: "link" %></td>
+                  <td class="capitalize"><%= link_to it.product.name, inventory_path(it), class: "link" %></td>
                   <td><%= it.quantity %></td>
                   <td><%= it.location %></td>
-                  <td><%= it.product.brand.name %></td>
+                  <td class="uppercase"><%= it.product.brand.name %></td>
                 </tr>
               <% end %>
             <% end %>

@@ -1,6 +1,11 @@
 <div id="search_results">
   <% if products.present? %>
     <div class="space-y-2">
+      <div class="mt-4">
+          <h3 class="text-sm font-bold mb-2">
+            <%= params[:query].present? ? "Search Results:" : "Top Sold:" %>
+          </h3>
+        </div>
       <% products.each do |product| %>
         <div class="flex justify-between items-center p-3 hover:bg-base-200 rounded-lg">
           <div>
