@@ -20,6 +20,7 @@
                   <td><%= it.name %></td>
                   <td><%= number_to_currency it.price, locale: :bn %></td>
                   <td><%= it.brand.name %></td>
+                  <td><%= link_to "Edit", edit_product_path(it), class: "btn" %></td>
                 </tr>
               <% end %>
             <% end %>

@@ -1,4 +1,4 @@
-<%= form_with model: product, url: products_path, method: :post do |form| %>  
+<%= form_with model: product do |form| %>  
   <fieldset class="fieldset">
     <%= form.collection_select :brand_id, Brand.order(:name), :id, :name, {prompt: true}, { class: "select w-full" } %>
   </fieldset>
@@ -12,6 +12,6 @@
     <%= form.number_field :price, placeholder: "Enter Product price", step: 0.5, class: "input w-full #{product.errors[:price].any? ? 'input-error' : ''}" %>
   </fieldset>
   <fieldset class="fieldset">
-    <%= form.submit "Add", class: "btn btn-primary mt-4" %>
+    <%= form.submit (product.persisted? ? "Update" : "Add"), class: "btn btn-primary mt-4" %>
   </fieldset>
 <% end %>

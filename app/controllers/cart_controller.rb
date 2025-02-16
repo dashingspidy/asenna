@@ -124,7 +124,6 @@ class CartController < ApplicationController
 
     ActiveRecord::Base.transaction do
       begin
-        # Calculate total price after discount
         subtotal = session[:cart].sum do |_, details|
           details["price"].to_f * details["quantity"].to_i
         end
@@ -132,36 +131,31 @@ class CartController < ApplicationController
         discount = session[:cart_discount] || 0
         total_price = subtotal * (1 - discount / 100.0)
 
-        # Create the sale record
         sale = Sale.create!(
           total_price: total_price,
           payment_method: session[:payment_method].strip
         )
 
-        # Process each cart item
         session[:cart].each do |product_id, details|
           product = Product.find(product_id)
           requested_quantity = details["quantity"].to_i
 
-          # Check if we have enough total inventory
           total_inventory = product.inventories.sum(:quantity)
           if total_inventory < requested_quantity
             raise ActiveRecord::RecordInvalid.new("Insufficient inventory for #{product.name}")
           end
 
-          # Create sale item
           sale.sale_items.create!(
             product_id: product_id,
             quantity: requested_quantity,
             price: details["price"]
           )
 
-          # Update inventories starting with the ones that have the most stock
           remaining_quantity = requested_quantity
           product.inventories.order(quantity: :desc).each do |inventory|
             break if remaining_quantity == 0
 
-            inventory.lock! # Add explicit row-level locking
+            inventory.lock!
             if inventory.quantity > 0
               deduct_quantity = [ inventory.quantity, remaining_quantity ].min
               new_quantity = inventory.quantity - deduct_quantity
@@ -178,7 +172,6 @@ class CartController < ApplicationController
           end
         end
 
-        # Clear cart after successful sale
         session[:cart] = nil
         session[:cart_discount] = nil
         session[:payment_method] = nil

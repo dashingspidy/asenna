@@ -1,4 +1,5 @@
 class SuppliersController < ApplicationController
+  before_action :set_supplier, only: %i[ edit update ]
   def index
     @supplier = Supplier.new
     @suppliers = Supplier.all
@@ -15,7 +16,26 @@ class SuppliersController < ApplicationController
     end
   end
 
+  def edit
+    @suppliers = Supplier.all
+    render :index
+  end
+
+  def update
+    if @supplier.update(supplier_params)
+      flash[:success] = "Supplier details updated."
+      redirect_to suppliers_path
+    else
+      flash[:error] = @supplier.errors.full_messages.join(", ")
+      redirect_to suppliers_path
+    end
+  end
+
   private
+
+  def set_supplier
+    @supplier = Supplier.find(params[:id])
+  end
 
   def supplier_params
     params.expect(supplier: [ :name, :email, :phone, :brand_id ])

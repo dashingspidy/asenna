@@ -1,4 +1,5 @@
 class BrandsController < ApplicationController
+  before_action :set_brand, only: %i[ edit update ]
   def index
     @brands = Brand.all.limit(20)
     @brand = Brand.new
@@ -15,7 +16,26 @@ class BrandsController < ApplicationController
     end
   end
 
+  def edit
+    @brands = Brand.all.limit(20)
+    render :index
+  end
+
+  def update
+    if @brand.update(brand_params)
+      flash[:success] = "Brand updated successfully."
+      redirect_to brands_path
+    else
+      flash[:error] = @brand.errors.full_messages.join(", ")
+      redirect_to brands_path
+    end
+  end
+
   private
+
+  def set_brand
+    @brand = Brand.find(params[:id])
+  end
 
   def brand_params
     params.require(:brand).permit(:name)
