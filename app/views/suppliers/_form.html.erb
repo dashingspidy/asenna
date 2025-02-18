@@ -3,13 +3,13 @@
     <%= form.collection_select :brand_id, Brand.order(:name), :id, :name, {prompt: "Select company/brand"}, { class: "select w-full" } %>
   </fieldset>
   <fieldset class="fieldset">
-    <%= form.text_field :name, placeholder: "Supplier name", class: "input w-full #{supplier.errors[:name].any? ? 'input-error' : ''}" %>
+    <%= form.text_field :name, placeholder: "Supplier name", class: "input w-full" %>
   </fieldset>
   <fieldset class="fieldset">
-    <%= form.email_field :email, placeholder: "Supplier email", class: "input w-full #{supplier.errors[:email].any? ? 'input-error' : ''}" %>
+    <%= form.email_field :email, placeholder: "Supplier email", class: "input w-full" %>
   </fieldset>
   <fieldset class="fieldset">
-    <%= form.phone_field :phone, placeholder: "Supplier phone number", class: "input w-full #{supplier.errors[:phone].any? ? 'input-error' : ''}" %>
+    <%= form.phone_field :phone, placeholder: "Supplier phone number", class: "input w-full" %>
   </fieldset>
   <fieldset class="fieldset">
     <%= form.submit (supplier.persisted? ? "Update" : "Add"), class: "btn btn-primary mt-4" %>

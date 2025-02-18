@@ -3,10 +3,10 @@
     <%= form.collection_select :product_id, Product.order(:name), :id, :name, {prompt: "Select product"}, { class: "select w-full" } %>
   </fieldset>
   <fieldset class="fieldset">
-    <%= form.number_field :quantity, placeholder: "Quantity (Units)", class: "input w-full #{inventory.errors[:quantity].any? ? 'input-error' : ''}" %>
+    <%= form.number_field :quantity, placeholder: "Quantity (Units)", class: "input w-full" %>
   </fieldset>
   <fieldset class="fieldset">
-    <%= form.text_field :location, placeholder: "Enter localtion if any", class: "input w-full #{inventory.errors[:location].any? ? 'input-error' : ''}" %>
+    <%= form.text_field :location, placeholder: "Enter localtion if any", class: "input w-full" %>
   </fieldset>
   <fieldset class="fieldset">
     <%= form.submit "Add", class: "btn btn-primary mt-4" %>

@@ -1,6 +1,6 @@
 <%= form_with model: brand do |form| %>  
   <fieldset class="fieldset">
-    <%= form.text_field :name, placeholder: "Brand name", class: "input input-bordered w-full #{brand.errors[:name].any? ? 'input-error' : ''}" %>
+    <%= form.text_field :name, placeholder: "Brand name", class: "input w-full" %>
   </fieldset>
   <fieldset class="fieldset">
     <%= form.submit brand.persisted? ? "Update" : "Add", class: "btn btn-primary" %>

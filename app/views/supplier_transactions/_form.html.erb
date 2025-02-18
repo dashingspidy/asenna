@@ -6,10 +6,10 @@
     <%= form.select :transaction_type, SupplierTransaction.transaction_types.keys, {prompt: "Transaction Type"}, { class: "select w-full" } %>
   </fieldset>
   <fieldset class="fieldset">
-    <%= form.number_field :amount, placeholder: "Amount", class: "input w-full #{supplier_transaction.errors[:amount].any? ? 'input-error' : ''}" %>
+    <%= form.number_field :amount, placeholder: "Amount", class: "input w-full" %>
   </fieldset>
   <fieldset class="fieldset">
-    <%= form.date_field :date, placeholder: "Enter date", class: "input w-full #{supplier_transaction.errors[:date].any? ? 'input-error' : ''}" %>
+    <%= form.date_field :date, placeholder: "Enter date", class: "input w-full" %>
   </fieldset>
   <fieldset class="fieldset">
     <%= form.submit "Add", class: "btn btn-primary mt-4" %>

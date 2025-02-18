@@ -22,6 +22,13 @@ class Product < ApplicationRecord
     where("LOWER(products.name) LIKE ?", "%#{query.downcase}%").distinct if query.present?
   }
 
+  scope :top_selling, ->(limit = 6) {
+    joins(:sale_items, :brand)
+      .group("products.name, brands.name")
+      .order(Arel.sql("SUM(sale_items.quantity) DESC"))
+      .limit(limit)
+  }
+
   def reduce_stock(quantity)
     inventory = Inventory.find_by(product_id: id)
     return unless inventory

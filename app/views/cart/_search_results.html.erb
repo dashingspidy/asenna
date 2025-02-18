@@ -9,8 +9,8 @@
       <% products.each do |product| %>
         <div class="flex justify-between items-center p-3 hover:bg-base-200 rounded-lg">
           <div>
-            <h3 class="font-medium">Name: <%= product.name %> (<%= product.brand.name %>)</h3>
-            <p class="text-primary">Price: <%= number_to_currency(product.price, locale: :bn) %></p>
+            <h3>Name: <span class="font-medium"><%= product.name %> (<%= product.brand.name %>)</span></h3>
+            <p class="my-2">Price: <span class="badge badge-soft badge-neutral"><%= number_to_currency(product.price, locale: :bn) %></span></p>
             <p>Quantity: <span class="badge badge-info"><%= product.inventories.sum(:quantity) %></span></p>
           </div>
           <% if product.inventories.sum(:quantity) == 0 %>
