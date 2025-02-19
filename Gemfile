@@ -23,7 +23,7 @@ gem "turbo-rails"
 
 # CSS
 gem "tailwindcss-ruby", "~> 4.0"
-gem "tailwindcss-rails", "~> 4.0"
+gem "tailwindcss-rails", "~> 4.1"
 
 # Solid Stack
 gem "solid_cache"
