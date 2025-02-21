@@ -85,6 +85,35 @@
   </div>
 </section>
 
-<section>
-  
+<section class="mt-4 grid grid-cols-4 gap-4">
+  <div class="col-span-2 card bg-warning shadow-md">
+    <div class="card-body">
+        <h1 class="text-lg card-title mb-4">Low Stock Alerts </h1>
+        <% @low_stock_products.each do %>
+            <div class="flex justify-between items-center gap-2 border-t border-dashed border-t-base-content/5 py-2 uppercase">
+              <%= it.name %> <span class="badge badge-soft badge-neutral"><%= it.inventories.sum(:quantity) %></span> <%= it.brand.name %>
+            </div>
+        <% end %>
+    </div>
+  </div>
+
+  <div class="col-span-2 card shadow-md">
+    <div class="card-body">
+      <h1 class="text-lg card-title">Supplier Financial Summary</h1>
+      <div>
+        <div class="flex justify-between">
+          <h2 class="text-lg">Total debt</h2>
+          <span class="text-lg badge badge-error"><%= number_to_currency @total_debt, locale: :bn %></span>
+        </div>
+        <div class="mt-4">
+          <% @supplier_debts.each do %>
+            <div class="flex justify-between items-center gap-2 border-t border-dashed border-t-base-content/5 py-2 capitalize">
+              <%= it.name %> <span class="badge badge-soft badge-neutral"><%= number_to_currency it.debt_amount, locale: :bn %></span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </section>

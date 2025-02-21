@@ -6,6 +6,7 @@ class DashboardController < ApplicationController
     @low_stock_products = Product.joins(:inventories).merge(Inventory.low_stock)
     @top_selling_products = Product.top_selling
     @top_selling_brands = Brand.top_selling
-    @supplier_balance = Supplier.supplier_balance
+    @total_debt = Supplier.total_debt
+    @supplier_debts = Supplier.debt_per_supplier
   end
 end

@@ -9,25 +9,20 @@ class Supplier < ApplicationRecord
   validates_presence_of :name, :phone
   validates_uniqueness_of :phone
 
-  scope :total_debt, -> {
+  scope :debt_per_supplier, -> {
     joins(:supplier_transactions)
-      .where(supplier_transactions: { transaction_type: "purchase" })
-      .group(:id)
-      .sum("supplier_transactions.amount")
+    .group("suppliers.id, suppliers.name")
+    .select("suppliers.id, suppliers.name,
+    SUM(CASE WHEN supplier_transactions.transaction_type = 'purchase' THEN supplier_transactions.amount ELSE 0 END) -
+    SUM(CASE WHEN supplier_transactions.transaction_type = 'payment' THEN supplier_transactions.amount ELSE 0 END) AS debt_amount")
+    .having("debt_amount > 0")
+    .order("debt_amount DESC")
   }
 
-  scope :total_payments, -> {
-    joins(:supplier_transactions)
-      .where(supplier_transactions: { transaction_type: "payment" })
-      .group(:id)
-      .sum("supplier_transactions.amount")
-  }
-
-  def self.supplier_balance
-    debts = total_debt
-    payments = total_payments
-
-    debts.transform_values { |purchase| purchase - payments.fetch(purchase, 0) }
+  def self.total_debt
+    purchases = SupplierTransaction.where(transaction_type: "purchase").sum(:amount)
+    payments = SupplierTransaction.where(transaction_type: "payment").sum(:amount)
+    purchases - payments
   end
 
   def total_due
