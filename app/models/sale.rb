@@ -5,7 +5,7 @@ class Sale < ApplicationRecord
   scope :total_by_day, ->(date = Time.zone.today) { where(created_at: date.all_day).sum(:total_price) }
   scope :total_by_month, ->(date = Time.zone.now) { where(created_at: date.all_month).sum(:total_price) }
   scope :total_by_year, ->(date = Time.zone.now) { where(created_at: date.all_year).sum(:total_price) }
-  scope :total_by_week, -> { group_by_day_of_week(:created_at, format: "%a").sum(:total_price) }
+  scope :total_by_week, -> { where(created_at: Time.current.beginning_of_week..Time.current.end_of_week).group_by_day_of_week(:created_at, format: "%a").sum(:total_price) }
   scope :total_customer_today, -> { where(created_at: Time.zone.today.all_day).count }
 
   def self.sales_insight

@@ -28,4 +28,5 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "sessions#new"
+  get "dashboard/sales_chart_data", to: "dashboard#sales_chart_data"
 end

@@ -1,15 +1,5 @@
 <section class="flex items-center">
   <h1 class="text-xl">Dashboard</h1>
-  <div class="ml-32">
-    <%= form_with url: "#" do |f| %>
-      <fieldset class="fieldset">
-        <label class="input">
-        <svg xmlns="http://www.w3.org/2000/svg" class="opacity-50" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        <%= f.text_field :search, placeholder: "Search products" %>
-        </label>
-      </fieldset>
-    <% end %>
-  </div>
 </section>
 
 <section class="mt-4 grid grid-cols-4">
@@ -46,15 +36,23 @@
   <div class="col-span-2 card bg-base-100 shadow-md">
     <div class="card-body">
       <h1 class="text-lg card-title">Sales Analytics</h1>
-      <%= column_chart @total_week,
-        colors: ["#000", "#000"], 
-        prefix: "৳",
-        library: {
-          animation: {
-            duration: 1000
+      <div class="flex gap-2 items-end justify-end" data-controller="chart">
+        <button data-action="click->chart#update" data-chart-range="weekly" class="btn">Weekly</button>
+        <button data-action="click->chart#update" data-chart-range="monthly" class="btn ">Monthly</button>
+        <button data-action="click->chart#update" data-chart-range="yearly" class="btn">Yearly</button>
+      </div>
+      <div id="sales-chart">
+        <%= column_chart @total_week,
+          id: "sales_chart",
+          colors: ["#000", "#000"], 
+          prefix: "৳",
+          library: {
+            animation: {
+              duration: 1000
+            }
           }
-        }
-      %>
+        %>
+      </div>
     </div>
   </div>
   <div class="col-span-1 card bg-base-100 shadow-md">
