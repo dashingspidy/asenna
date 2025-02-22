@@ -2,7 +2,11 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
   resources :brands
-  resources :products
+  resources :products do
+    collection do
+      get :search
+    end
+  end
   resources :suppliers
   resources :inventories
   resources :supplier_transactions

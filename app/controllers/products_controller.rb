@@ -31,6 +31,19 @@ class ProductsController < ApplicationController
     end
   end
 
+  def search
+    @q = Product.ransack(name_cont: params[:q])
+    @products = @q.result(distinct: true).limit(10)
+
+    render json: @products.map { |product|
+      {
+        id: product.id,
+        name: product.name,
+        brand: product.brand.name
+      }
+    }
+  end
+
   private
 
   def set_product

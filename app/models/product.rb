@@ -29,6 +29,14 @@ class Product < ApplicationRecord
       .limit(limit)
   }
 
+  def self.ransackable_attributes(auth_object = nil)
+    if auth_object == :inventory_form
+      [ "name" ]
+    else
+      [ "brand_id", "created_at", "description", "id", "name", "price", "updated_at" ]
+    end
+  end
+
   def reduce_stock(quantity)
     inventory = Inventory.find_by(product_id: id)
     return unless inventory

@@ -1,14 +1,27 @@
-<%= form_with model: inventory, url: inventories_path, method: :post do |form| %>  
-  <fieldset class="fieldset">
-    <%= form.select :product_id, Product.pluck(:name, :id), {prompt: "Select product"}, { class: "!min-h-[40px]", data: { controller: "product-selector"} } %>
-  </fieldset>
-  <fieldset class="fieldset">
-    <%= form.number_field :quantity, placeholder: "Quantity (Units)", class: "input w-full" %>
-  </fieldset>
-  <fieldset class="fieldset">
-    <%= form.text_field :location, placeholder: "Enter localtion if any", class: "input w-full" %>
-  </fieldset>
-  <fieldset class="fieldset">
-    <%= form.submit "Add", class: "btn btn-primary mt-4" %>
-  </fieldset>
+<%= form_with model: inventory, url: inventories_path, method: :post do |form| %>
+  <div class="relative" data-controller="product-selector">
+    <fieldset class="fieldset">
+      <%= text_field_tag :product_search, nil,
+        placeholder: "Product name",
+        class: "input w-full",
+        data: { 
+          product_selector_target: "input",
+          action: "input->product-selector#search"
+        } %>
+      <%= form.hidden_field :product_id, data: { product_selector_target: "hiddenInput" } %>
+    </fieldset>
+    
+    <div class="absolute w-full bg-white border rounded-md shadow-lg mt-1 z-50 hidden"
+         data-product-selector-target="suggestions">
+    </div>
+    <fieldset class="fieldset">
+      <%= form.number_field :quantity, placeholder: "Quantity (Units)", class: "input w-full" %>
+    </fieldset>
+    <fieldset class="fieldset">
+      <%= form.text_field :location, placeholder: "Enter localtion if any", class: "input w-full" %>
+    </fieldset>
+    <fieldset class="fieldset">
+      <%= form.submit "Add", class: "btn btn-primary mt-4" %>
+    </fieldset>
+  </div>
 <% end %>
