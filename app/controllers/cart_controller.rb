@@ -1,31 +1,168 @@
 class CartController < ApplicationController
+  before_action :load_cart
+  before_action :load_products, only: [ :show, :search ]
+
   def show
+  end
+
+  def add
+    product = find_product
+    if can_add_to_cart?(product)
+      add_to_cart(product)
+    else
+      flash[:error] = "Only #{available_quantity(product)} available in stock."
+    end
+    respond_with_cart_update
+  end
+
+  def update_quantity
+    product = find_product
+    new_quantity = params[:quantity].to_i
+
+    if valid_quantity?(product, new_quantity)
+      update_item_quantity(product.id.to_s, new_quantity)
+    else
+      flash[:error] = "Invalid quantity. Maximum available: #{available_quantity(product)}"
+    end
+    respond_with_cart_update
+  end
+
+  def update_cart_discount
+    discount = params[:discount].to_i
+    if valid_discount?(discount)
+      session[:cart_discount] = discount
+    else
+      flash[:error] = "Invalid discount percentage"
+    end
+    respond_with_cart_update
+  end
+
+  def update_payment_method
+    payment_method = params[:payment_method]
+    if valid_payment_method?(payment_method)
+      session[:payment_method] = payment_method
+    else
+      flash[:error] = "Invalid payment method"
+    end
+    respond_with_payment_update
+  end
+
+  def remove
+    remove_from_cart(params[:product_id].to_s)
+    clear_cart_if_empty
+    respond_with_cart_update
+  end
+
+  def checkout
+    return handle_invalid_checkout unless valid_checkout?
+
+    CheckoutService.new(cart: @cart,
+                       payment_method: @payment_method,
+                       discount: @cart_discount).process do |success, message|
+      if success
+        clear_cart
+        flash[:success] = message
+      else
+        flash[:error] = message
+      end
+    end
+
+    respond_with_checkout_update
+  end
+
+  def search
+    @products = params[:query].strip.present? ?
+      Product.search_by_name(params[:query].strip) :
+      Product.most_sold
+    render :show, locals: { products: @products }
+  end
+
+  private
+
+  def load_cart
     @cart = session[:cart] || {}
     @cart_discount = session[:cart_discount] || 0
     @cart_items = load_cart_items
     @payment_method = session[:payment_method]
+  end
+
+  def load_products
     @products = Product.most_sold
   end
 
-  def add
-    session[:cart] ||= {}
-    product_id = params[:product_id].to_s
-    product = Product.find(product_id)
+  def load_cart_items
+    return [] if session[:cart].blank?
+    Product.where(id: session[:cart].keys).index_by(&:id)
+  end
 
-    inventory_quantity = product.inventories.sum(:quantity)
-    current_quantity = session[:cart][product_id]&.dig("quantity").to_i
+  def find_product
+    Product.find(params[:product_id].to_s)
+  end
 
-    if inventory_quantity > 0 && current_quantity < inventory_quantity
-      session[:cart][product_id] ||= {
-        "quantity" => 0,
-        "price" => product.price,
-        "name" => product.name
-      }
-      session[:cart][product_id]["quantity"] += 1
-    else
-      flash[:error] = "Only #{inventory_quantity} available in stock."
+  def available_quantity(product)
+    product.inventories.sum(:quantity)
+  end
+
+  def can_add_to_cart?(product)
+    current_quantity = (@cart[product.id.to_s] || {})["quantity"].to_i
+    available_quantity(product) > 0 && current_quantity < available_quantity(product)
+  end
+
+  def add_to_cart(product)
+    product_id = product.id.to_s
+    current_quantity = (@cart[product_id] || {})["quantity"].to_i
+
+    @cart[product_id] = {
+      "quantity" => current_quantity + 1,
+      "price" => product.price,
+      "name" => product.name
+    }
+
+    session[:cart] = @cart
+  end
+
+  def valid_quantity?(product, quantity)
+    quantity > 0 && quantity <= available_quantity(product)
+  end
+
+  def update_item_quantity(product_id, quantity)
+    session[:cart][product_id]["quantity"] = quantity
+  end
+
+  def valid_discount?(discount)
+    discount.between?(0, 100)
+  end
+
+  def valid_payment_method?(payment_method)
+    [ "cash", "online" ].include?(payment_method)
+  end
+
+  def remove_from_cart(product_id)
+    session[:cart].delete(product_id)
+  end
+
+  def clear_cart_if_empty
+    if session[:cart].empty?
+      clear_cart
     end
+  end
 
+  def clear_cart
+    session[:cart] = nil
+    session[:cart_discount] = nil
+    session[:payment_method] = nil
+  end
+
+  def valid_checkout?
+    session[:cart].present? && session[:payment_method].present?
+  end
+
+  def handle_invalid_checkout
+    message = session[:cart].blank? ? "Cart is empty" : "Please select a payment method"
+    redirect_to cart_path, alert: message
+  end
+
+  def respond_with_cart_update
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: [
@@ -41,23 +178,14 @@ class CartController < ApplicationController
     end
   end
 
-  def update_quantity
-    product_id = params[:product_id].to_s
-    new_quantity = params[:quantity].to_i
-
-    product = Product.find(product_id)
-    inventory_quantity = product.inventories.sum(:quantity)
-
-    if inventory_quantity > 0 && new_quantity <= inventory_quantity && new_quantity > 0
-      session[:cart][product_id]["quantity"] = new_quantity
-    else
-      flash[:error] = "Invalid quantity. Maximum available: #{inventory_quantity}"
-    end
-
+  def respond_with_payment_update
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: [
           turbo_stream.update("flash-messages", partial: "layouts/flash"),
+          turbo_stream.update("payment-method", partial: "cart/payment_method", locals: {
+            payment_method: session[:payment_method]
+          }),
           turbo_stream.update("add-cart", partial: "cart/cart_items", locals: {
             cart: session[:cart],
             cart_discount: session[:cart_discount] || 0,
@@ -68,155 +196,22 @@ class CartController < ApplicationController
     end
   end
 
-  def update_cart_discount
-    discount = params[:discount].to_i
-
-    if discount >= 0 && discount <= 100
-      session[:cart_discount] = discount
-    else
-      flash[:error] = "Invalid discount percentage"
-    end
-
+  def respond_with_checkout_update
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: [
           turbo_stream.update("flash-messages", partial: "layouts/flash"),
           turbo_stream.update("add-cart", partial: "cart/cart_items", locals: {
-            cart: session[:cart],
-            cart_discount: session[:cart_discount],
-            payment_method: session[:payment_method]
-          })
-        ]
-      end
-    end
-  end
-
-  def update_payment_method
-    payment_method = params[:payment_method]
-
-    if [ "cash", "online" ].include?(payment_method)
-      session[:payment_method] = payment_method
-    else
-      flash[:error] = "Invalid payment method"
-    end
-
-    respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: [
-          turbo_stream.update("flash-messages", partial: "layouts/flash"),
+            cart: {},
+            cart_discount: 0,
+            payment_method: nil
+          }),
           turbo_stream.update("payment-method", partial: "cart/payment_method", locals: {
-            payment_method: session[:payment_method]
+            payment_method: nil
           })
         ]
       end
+      format.html { redirect_to cart_path }
     end
-  end
-
-  def remove
-    product_id = params[:product_id].to_s
-    session[:cart].delete(product_id)
-
-    redirect_to cart_path
-  end
-
-  def checkout
-    return redirect_to cart_path, alert: "Cart is empty" if session[:cart].blank?
-    return redirect_to cart_path, alert: "Please select a payment method" if session[:payment_method].blank?
-
-    ActiveRecord::Base.transaction do
-      begin
-        subtotal = session[:cart].sum do |_, details|
-          details["price"].to_f * details["quantity"].to_i
-        end
-
-        discount = session[:cart_discount] || 0
-        total_price = subtotal * (1 - discount / 100.0)
-
-        sale = Sale.create!(
-          total_price: total_price,
-          payment_method: session[:payment_method].strip
-        )
-
-        session[:cart].each do |product_id, details|
-          product = Product.find(product_id)
-          requested_quantity = details["quantity"].to_i
-
-          total_inventory = product.inventories.sum(:quantity)
-          if total_inventory < requested_quantity
-            raise ActiveRecord::RecordInvalid.new("Insufficient inventory for #{product.name}")
-          end
-
-          sale.sale_items.create!(
-            product_id: product_id,
-            quantity: requested_quantity,
-            price: details["price"]
-          )
-
-          remaining_quantity = requested_quantity
-          product.inventories.order(quantity: :desc).each do |inventory|
-            break if remaining_quantity == 0
-
-            inventory.lock!
-            if inventory.quantity > 0
-              deduct_quantity = [ inventory.quantity, remaining_quantity ].min
-              new_quantity = inventory.quantity - deduct_quantity
-
-              if inventory.update!(quantity: new_quantity)
-                StockTransaction.create!(
-                  inventory: inventory,
-                  transaction_type: "sale",
-                  quantity: -deduct_quantity
-                )
-                remaining_quantity -= deduct_quantity
-              end
-            end
-          end
-        end
-
-        session[:cart] = nil
-        session[:cart_discount] = nil
-        session[:payment_method] = nil
-
-        flash[:success] = "Order completed successfully!"
-        respond_to do |format|
-          format.turbo_stream do
-            render turbo_stream: [
-              turbo_stream.update("flash-messages", partial: "layouts/flash"),
-              turbo_stream.update("add-cart", partial: "cart/cart_items", locals: {
-                cart: {},
-                cart_discount: 0,
-                payment_method: nil
-              }),
-              turbo_stream.update("payment-method", partial: "cart/payment_method", locals: {
-                payment_method: nil
-              })
-            ]
-          end
-          format.html { redirect_to cart_path }
-        end
-      rescue ActiveRecord::RecordInvalid => e
-        flash[:error] = e.message
-        respond_to do |format|
-          format.turbo_stream do
-            render turbo_stream: turbo_stream.update("flash-messages", partial: "layouts/flash")
-          end
-          format.html { redirect_to cart_path }
-        end
-      end
-    end
-  end
-
-  def search
-    query = params[:query].strip
-    @products = query.present? ? Product.search_by_name(query) : Product.most_sold
-    render :show, locals: { products: @products }
-  end
-
-  private
-
-  def load_cart_items
-    return [] if session[:cart].blank?
-    product_ids = session[:cart].keys
-    Product.where(id: product_ids).index_by(&:id)
   end
 end

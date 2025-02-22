@@ -41,7 +41,7 @@
               <%= button_to remove_cart_path(product_id: product_id),
                   method: :delete,
                   class: "btn btn-error btn-sm",
-                  data: { turbo: true } do %>
+                  data: { turbo_frame: "add-cart" } do %>
                 Remove
               <% end %>
             </td>
