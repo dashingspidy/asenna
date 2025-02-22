@@ -9,6 +9,7 @@ gem "bootsnap", require: false
 gem "image_processing", "~> 1.14"
 gem "chartkick"
 gem "groupdate"
+gem "ransack"
 
 # Database
 gem "sqlite3", ">= 2.1"

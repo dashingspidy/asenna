@@ -1,6 +1,6 @@
 <%= form_with model: inventory, url: inventories_path, method: :post do |form| %>  
   <fieldset class="fieldset">
-    <%= form.collection_select :product_id, Product.order(:name), :id, :name, {prompt: "Select product"}, { class: "select w-full" } %>
+    <%= form.select :product_id, Product.pluck(:name, :id), {prompt: "Select product"}, { class: "!min-h-[40px]", data: { controller: "product-selector"} } %>
   </fieldset>
   <fieldset class="fieldset">
     <%= form.number_field :quantity, placeholder: "Quantity (Units)", class: "input w-full" %>
