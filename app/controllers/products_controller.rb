@@ -1,7 +1,7 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: %i[ edit update ]
   def index
-    @products = Product.includes(:brand).all.limit(10)
+    @pagy, @products = pagy(Product.includes(:brand).all, limit: 15)
     @product = Product.new
   end
 
@@ -17,7 +17,7 @@ class ProductsController < ApplicationController
   end
 
   def edit
-    @products = Product.includes(:brand).all.limit(10)
+    @pagy, @products = pagy(Product.includes(:brand).all, limit: 15)
     render :index
   end
 

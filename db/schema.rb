@@ -83,7 +83,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_21_153248) do
   end
 
   create_table "supplier_transactions", force: :cascade do |t|
-    t.integer "supplier_id", null: false
+    t.integer "supplier_id"
     t.string "transaction_type", null: false
     t.decimal "amount", null: false
     t.date "date", null: false

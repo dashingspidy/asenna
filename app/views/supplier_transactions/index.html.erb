@@ -10,7 +10,7 @@
       <table class="table">
         <thead>
           <tr>
-            <th>Supplier Name</th>
+            <th>Supplier/Owner</th>
             <th>Transaction Type</th>
             <th>Amount</th>
             <th>Date</th>
@@ -20,7 +20,11 @@
             <% if @transactions.present? %>
               <% @transactions.each do %>
                 <tr>
-                  <td class="capitalize"><%= link_to it.supplier.name, supplier_transaction_path(it.supplier.id), class: "link" %></td>
+                  <% if it.supplier.present? %>
+                    <td class="capitalize"><%= link_to it.supplier.name, supplier_transaction_path(it.supplier.id), class: "link" %></td>
+                  <% else %>
+                    <td>None</td>
+                  <% end %>
                   <td class="capitalize"><%= it.transaction_type %></td>
                   <td><%= number_to_currency it.amount, locale: :bn %></td>
                   <td><%= it.date.strftime("%d/%m/%Y") %></td>
@@ -29,6 +33,9 @@
             <% end %>
           </tbody>
       </table>
+    </div>
+    <div class="flex items-center justify-center mt-4">
+      <%= pagy_nav(@pagy) if @pagy.pages > 1 %>
     </div>
   </section>
 </div>

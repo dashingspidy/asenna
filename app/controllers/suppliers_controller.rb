@@ -2,7 +2,7 @@ class SuppliersController < ApplicationController
   before_action :set_supplier, only: %i[ edit update ]
   def index
     @supplier = Supplier.new
-    @suppliers = Supplier.all
+    @pagy, @suppliers = pagy(Supplier.all, limit: 15)
   end
 
   def create
@@ -17,7 +17,7 @@ class SuppliersController < ApplicationController
   end
 
   def edit
-    @suppliers = Supplier.all
+    @pagy, @suppliers = pagy(Supplier.all, limit: 15)
     render :index
   end
 

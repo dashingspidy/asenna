@@ -29,5 +29,8 @@
           </tbody>
       </table>
     </div>
+    <div class="flex items-center justify-center mt-4">
+      <%= pagy_nav(@pagy) if @pagy.pages > 1 %>
+    </div>
   </section>
 </div>

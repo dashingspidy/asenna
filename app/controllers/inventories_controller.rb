@@ -1,6 +1,6 @@
 class InventoriesController < ApplicationController
   def index
-    @inventories = Inventory.all
+    @pagy, @inventories = pagy(Inventory.all, limit: 15)
     @inventory = Inventory.new
   end
 

@@ -1,7 +1,7 @@
 class BrandsController < ApplicationController
   before_action :set_brand, only: %i[ edit update ]
   def index
-    @brands = Brand.all.limit(20)
+    @pagy, @brands = pagy(Brand.all, limit: 15)
     @brand = Brand.new
   end
 
@@ -17,7 +17,7 @@ class BrandsController < ApplicationController
   end
 
   def edit
-    @brands = Brand.all.limit(20)
+    @pagy, @brands = pagy(Brand.all, limit: 15)
     render :index
   end
 

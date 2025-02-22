@@ -1,12 +1,19 @@
-<%= form_with model: supplier_transaction, url: supplier_transactions_path, method: :post do |form| %>  
+<%= form_with model: supplier_transaction, url: supplier_transactions_path, method: :post, data: { controller: "transaction" } do |form| %>  
   <fieldset class="fieldset">
+    <%= form.select :transaction_type, 
+                    SupplierTransaction.transaction_types.keys, 
+                    {prompt: "Transaction Type"}, 
+                    { class: "select w-full", data: { action: "transaction#togglePaymentAmount"} }
+    %>
+  <fieldset class="fieldset hidden" data-transaction-target="supplier">
     <%= form.collection_select :supplier_id, Supplier.order(:name), :id, :name, {prompt: "Select supplier"}, { class: "select w-full" } %>
   </fieldset>
-  <fieldset class="fieldset">
-    <%= form.select :transaction_type, SupplierTransaction.transaction_types.keys, {prompt: "Transaction Type"}, { class: "select w-full" } %>
   </fieldset>
   <fieldset class="fieldset">
-    <%= form.number_field :amount, placeholder: "Amount", class: "input w-full" %>
+    <%= form.number_field :amount, placeholder: "Total Amount", class: "input w-full" %>
+  </fieldset>
+  <fieldset class="fieldset hidden" data-transaction-target="paymentAmount">
+    <%= form.number_field :payment_amount, placeholder: "Payment Amount", class: "input w-full" %>
   </fieldset>
   <fieldset class="fieldset">
     <%= form.date_field :date, placeholder: "Enter date", class: "input w-full" %>
