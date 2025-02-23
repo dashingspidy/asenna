@@ -81,7 +81,7 @@ class CartController < ApplicationController
 
   def load_cart
     @cart = session[:cart] || {}
-    @cart_discount = session[:cart_discount] || 0
+    @cart_discount = (session[:cart_discount] || 0).to_f
     @cart_items = load_cart_items
     @payment_method = session[:payment_method]
   end

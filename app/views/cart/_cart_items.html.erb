@@ -58,9 +58,15 @@
         <tr>
           <td colspan="3" class="text-right font-bold">
             Discount:
-            <%= form_with url: update_cart_discount_cart_path, method: :patch, data: { controller: "cart", turbo_frame: "add-cart" }, class: "inline-block ml-2" do |f| %>
+            <%= form_with url: update_cart_discount_cart_path, 
+                method: :patch, 
+                data: { 
+                  controller: "cart", 
+                  turbo_frame: "add-cart"
+                }, 
+                class: "inline-block ml-2" do |f| %>
               <%= f.number_field :discount, 
-                  value: (cart_discount || 0), 
+                  value: cart_discount, 
                   min: 0,
                   max: 100,
                   class: "input input-bordered input-sm w-20",
@@ -70,13 +76,15 @@
             <% end %>
           </td>
           <td colspan="2" class="font-bold text-error">
-            -<%= number_to_currency(subtotal * (cart_discount || 0) / 100, locale: :bn) %>
+            <% discount_amount = subtotal * cart_discount.to_f / 100 %>
+            -<%= number_to_currency(discount_amount, locale: :bn) %>
           </td>
         </tr>
         <tr class="text-lg">
           <td colspan="3" class="text-right font-bold">Total:</td>
           <td colspan="2" class="font-bold">
-            <%= number_to_currency(subtotal * (1 - (cart_discount || 0) / 100), locale: :bn) %>
+            <% final_total = subtotal - discount_amount %>
+            <%= number_to_currency(final_total, locale: :bn) %>
           </td>
         </tr>
       </tfoot>

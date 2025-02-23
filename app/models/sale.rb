@@ -2,6 +2,7 @@ class Sale < ApplicationRecord
   before_create :generate_sale_number
   has_many :sale_items, dependent: :destroy
   has_many :products, through: :sale_items
+  belongs_to :customer, optional: true
 
   scope :total_by_day, ->(date = Time.zone.today) { where(created_at: date.all_day).sum(:total_price) }
   scope :total_by_month, ->(date = Time.zone.now) { where(created_at: date.all_month).sum(:total_price) }
