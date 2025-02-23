@@ -23,6 +23,9 @@ Rails.application.routes.draw do
     patch :update_quantity
     patch :update_cart_discount
     patch :update_payment_method
+    post :search_customer
+    delete :remove_customer
+    patch :update_paying_amount
   end
   get "dashboard", to: "dashboard#index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

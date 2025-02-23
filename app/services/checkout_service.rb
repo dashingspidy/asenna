@@ -1,8 +1,10 @@
 class CheckoutService
-  def initialize(cart:, payment_method:, discount:)
+  def initialize(cart:, payment_method:, discount:, customer_id: nil, paying_amount: nil)
     @cart = cart
     @payment_method = payment_method
     @discount = discount
+    @customer_id = customer_id
+    @paying_amount = paying_amount.to_f
   end
 
   def process
@@ -10,6 +12,10 @@ class CheckoutService
       begin
         create_sale
         process_inventory
+        if @customer_id.present?
+          create_customer_transaction("purchase", calculate_total_price)
+          create_customer_transaction("payment", @paying_amount) if @paying_amount.positive?
+        end
         yield(true, "Order completed successfully!")
       rescue ActiveRecord::RecordInvalid => e
         yield(false, e.message)
@@ -22,7 +28,8 @@ class CheckoutService
   def create_sale
     @sale = Sale.create!(
       total_price: calculate_total_price,
-      payment_method: @payment_method.strip
+      payment_method: @payment_method.strip,
+      customer_id: @customer_id
     )
 
     @cart.each do |product_id, details|
@@ -32,6 +39,15 @@ class CheckoutService
         price: details["price"]
       )
     end
+  end
+
+  def create_customer_transaction(transaction_type, amount)
+    CustomerTransaction.create!(
+      customer_id: @customer_id,
+      transaction_type: transaction_type,
+      amount: amount,
+      date: Date.current
+    )
   end
 
   def calculate_total_price

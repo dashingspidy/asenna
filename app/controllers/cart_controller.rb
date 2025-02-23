@@ -5,6 +5,30 @@ class CartController < ApplicationController
   def show
   end
 
+  def search_customer
+    @customer = Customer.find_by(phone: params[:phone])
+
+    respond_to do |format|
+      format.turbo_stream do
+        if @customer
+          session[:cart_customer_id] = @customer.id
+          render turbo_stream: [
+            turbo_stream.update("customer-info", partial: "cart/customer_info", locals: { customer: @customer }),
+            turbo_stream.update("add-cart", partial: "cart/cart_items", locals: {
+              cart: session[:cart],
+              cart_discount: session[:cart_discount] || 0,
+              payment_method: session[:payment_method],
+              customer: @customer
+            })
+          ]
+        else
+            render turbo_stream: turbo_stream.update("customer-info",
+            html: '<div class="alert alert-error">Customer not found</div>'.html_safe)
+        end
+      end
+    end
+  end
+
   def add
     product = find_product
     if can_add_to_cart?(product)
@@ -58,7 +82,9 @@ class CartController < ApplicationController
 
     CheckoutService.new(cart: @cart,
                        payment_method: @payment_method,
-                       discount: @cart_discount).process do |success, message|
+                       discount: @cart_discount,
+                       customer_id: session[:cart_customer_id],
+                       paying_amount: session[:paying_amount]).process do |success, message|
       if success
         clear_cart
         flash[:success] = message
@@ -77,6 +103,40 @@ class CartController < ApplicationController
     render :show, locals: { products: @products }
   end
 
+  def remove_customer
+    session[:cart_customer_id] = nil
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.update("customer-info", html: ""),
+          turbo_stream.update("add-cart", partial: "cart/cart_items", locals: {
+            cart: session[:cart],
+            cart_discount: session[:cart_discount] || 0,
+            payment_method: session[:payment_method],
+            customer: nil
+          })
+        ]
+      end
+    end
+  end
+
+  def update_paying_amount
+    session[:paying_amount] = params[:paying_amount].to_f
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.update("add-cart", partial: "cart/cart_items", locals: {
+            cart: session[:cart],
+            cart_discount: session[:cart_discount] || 0,
+            payment_method: session[:payment_method],
+            customer: @customer,
+            paying_amount: session[:paying_amount]
+          })
+        ]
+      end
+    end
+  end
+
   private
 
   def load_cart
@@ -84,6 +144,8 @@ class CartController < ApplicationController
     @cart_discount = (session[:cart_discount] || 0).to_f
     @cart_items = load_cart_items
     @payment_method = session[:payment_method]
+    @customer = Customer.find_by(id: session[:cart_customer_id])
+    @paying_amount = session[:paying_amount]
   end
 
   def load_products
@@ -151,6 +213,8 @@ class CartController < ApplicationController
     session[:cart] = nil
     session[:cart_discount] = nil
     session[:payment_method] = nil
+    session[:paying_amount] = nil
+    session[:cart_customer_id] = nil
   end
 
   def valid_checkout?
@@ -170,7 +234,9 @@ class CartController < ApplicationController
           turbo_stream.update("add-cart", partial: "cart/cart_items", locals: {
             cart: session[:cart],
             cart_discount: session[:cart_discount] || 0,
-            payment_method: session[:payment_method]
+            payment_method: session[:payment_method],
+            customer: @customer,
+            paying_amount: session[:paying_amount]
           })
         ]
       end
@@ -189,7 +255,9 @@ class CartController < ApplicationController
           turbo_stream.update("add-cart", partial: "cart/cart_items", locals: {
             cart: session[:cart],
             cart_discount: session[:cart_discount] || 0,
-            payment_method: session[:payment_method]
+            payment_method: session[:payment_method],
+            customer: @customer,
+            paying_amount: session[:paying_amount]
           })
         ]
       end
@@ -201,10 +269,12 @@ class CartController < ApplicationController
       format.turbo_stream do
         render turbo_stream: [
           turbo_stream.update("flash-messages", partial: "layouts/flash"),
+          turbo_stream.update("customer-info", html: ""),
           turbo_stream.update("add-cart", partial: "cart/cart_items", locals: {
             cart: {},
             cart_discount: 0,
-            payment_method: nil
+            payment_method: nil,
+            customer: nil
           }),
           turbo_stream.update("payment-method", partial: "cart/payment_method", locals: {
             payment_method: nil

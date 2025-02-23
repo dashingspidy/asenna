@@ -1,0 +1,17 @@
+<div class="card-title mt-4 mb-2">Customer Information</div>
+<div class="flex gap-2">
+  <%= form_with url: search_customer_cart_path, 
+                method: :post,
+                data: { turbo_frame: "customer-info" } do |f| %>
+    <div class="join">
+      <%= f.telephone_field :phone, 
+          class: "input input-bordered w-full",
+          placeholder: "Search customer by phone..." %>
+      <%= f.submit "Search", class: "btn join-item" %>
+    </div>
+  <% end %>
+</div>
+
+<div id="customer-info" class="mt-2">
+  <%= render "cart/customer_info", customer: customer if local_assigns[:customer] %>
+</div>

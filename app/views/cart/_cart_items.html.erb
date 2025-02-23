@@ -87,6 +87,25 @@
             <%= number_to_currency(final_total, locale: :bn) %>
           </td>
         </tr>
+        
+        <% if local_assigns[:customer].present? %>
+          <tr>
+            <td colspan="3" class="text-right font-bold">Paying Now:</td>
+            <td colspan="2">
+              <%= form_with url: update_paying_amount_cart_path,
+                  method: :patch,
+                  data: { controller: "cart", turbo_frame: "add-cart" } do |f| %>
+                <%= f.number_field :paying_amount,
+                    value: local_assigns[:paying_amount] || final_total,
+                    min: 0,
+                    max: final_total,
+                    step: 0.01,
+                    class: "input input-bordered input-sm w-32",
+                    data: { action: "change->cart#submitForm" } %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
       </tfoot>
     </table>
   </div>
