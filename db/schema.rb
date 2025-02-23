@@ -10,11 +10,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_21_153248) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_23_123141) do
   create_table "brands", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "customer_transactions", force: :cascade do |t|
+    t.integer "customer_id", null: false
+    t.string "transaction_type"
+    t.decimal "amount", null: false
+    t.date "date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_id"], name: "index_customer_transactions_on_customer_id"
+  end
+
+  create_table "customers", force: :cascade do |t|
+    t.string "name"
+    t.integer "phone", null: false
+    t.string "address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["phone"], name: "index_customers_on_phone"
   end
 
   create_table "inventories", force: :cascade do |t|
@@ -62,6 +81,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_21_153248) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "payment_method"
+    t.integer "customer_id"
+    t.string "sale_number"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -110,12 +131,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_21_153248) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "customer_transactions", "customers"
   add_foreign_key "inventories", "products"
   add_foreign_key "product_suppliers", "products"
   add_foreign_key "product_suppliers", "suppliers"
   add_foreign_key "products", "brands"
   add_foreign_key "sale_items", "products"
   add_foreign_key "sale_items", "sales"
+  add_foreign_key "sales", "customers"
   add_foreign_key "sessions", "users"
   add_foreign_key "stock_transactions", "inventories"
   add_foreign_key "supplier_transactions", "suppliers"

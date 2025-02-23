@@ -1,0 +1,19 @@
+<%= form_with(model: customer_transaction, url: create_transaction_customer_path(@customer), method: :post, local: true) do |form| %>  
+  <fieldset class="fieldset">
+    <%= form.select :transaction_type, 
+                    CustomerTransaction.transaction_types.keys, 
+                    {prompt: "Transaction Type"}, 
+                    { class: "select w-full" }
+    %>
+  <%= form.hidden_field :customer_id, value: @customer.id %>
+  </fieldset>
+  <fieldset class="fieldset">
+    <%= form.number_field :amount, placeholder: "Total Amount", class: "input w-full" %>
+  </fieldset>
+  <fieldset class="fieldset">
+    <%= form.date_field :date, placeholder: "Enter date", class: "input w-full" %>
+  </fieldset>
+  <fieldset class="fieldset">
+    <%= form.submit "Add", class: "btn btn-primary mt-4" %>
+  </fieldset>
+<% end %>

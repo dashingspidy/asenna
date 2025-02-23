@@ -10,6 +10,11 @@ Rails.application.routes.draw do
   resources :suppliers
   resources :inventories
   resources :supplier_transactions
+  resources :customers do
+    member do
+      post :create_transaction
+    end
+  end
   resource :cart, only: [ :show ], controller: :cart do
     post :add
     delete :remove

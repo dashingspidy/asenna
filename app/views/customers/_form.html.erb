@@ -1,0 +1,14 @@
+<%= form_with model: customer do |form| %>  
+  <fieldset class="fieldset">
+    <%= form.text_field :name, placeholder: "Customer name", class: "input w-full" %>
+  </fieldset>
+  <fieldset class="fieldset">
+    <%= form.phone_field :phone, placeholder: "Customer phone number", class: "input w-full" %>
+  </fieldset>
+  <fieldset class="fieldset">
+    <%= form.text_field :address, placeholder: "Customer address", class: "input w-full" %>
+  </fieldset>
+  <fieldset class="fieldset">
+    <%= form.submit (customer.persisted? ? "Update" : "Add"), class: "btn btn-primary mt-4" %>
+  </fieldset>
+<% end %>

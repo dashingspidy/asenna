@@ -1,0 +1,36 @@
+<div class="grid grid-cols-3 gap-10 p-4">
+  <section class="card bg-base-100 shadow-sm">
+    <div class="card-body">
+      <h3 class="card-title"><%= @customer.persisted? ? "Update Customer" : "Add new customer" %></h3>
+      <%= render "form", customer: @customer %>
+    </div>
+  </section>
+  <section class="col-span-2">
+    <div class="overflow-x-auto">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Customer Name</th>
+            <th>Customer Phone number</th>
+            <th>Customer Address</th>
+          </tr>
+        </thead>
+          <tbody>
+            <% if @customers.present? %>
+              <% @customers.each do %>
+                <tr>
+                  <td class="capitalize"><%= link_to it.name, customer_path(it), class: "link" %></td>
+                  <td>0<%= it.phone %></td>
+                  <td class="uppercase"><%= it.address %></td>
+                  <td><%= link_to "Edit", edit_customer_path(it), class: "btn" %></td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+      </table>
+    </div>
+    <div class="flex items-center justify-center mt-4">
+      <%= pagy_nav(@pagy) if @pagy.pages > 1 %>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,38 @@
+<div class="grid grid-cols-3 gap-10 p-4">
+  <section class="card bg-base-100 shadow-sm">
+    <div class="card-body">
+      <h3 class="card-title">Add new transaction</h3>
+      <%= render partial: "customer_transactions/form", locals: { customer_transaction: @customer_transaction } %>
+    </div>
+  </section>
+  <section class="col-span-2">
+    <div class="card w-96 bg-base-100 card-xs shadow-sm">
+      <div class="card-body">
+        <h2 class="card-title"><%= @customer.name %></h2>
+        <p class="text-xl">Total Due: <%= number_to_currency @customer.total_due, locale: :bn %></p>
+      </div>
+    </div>
+    <div class="overflow-x-auto mt-4">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Transaction Type</th>
+            <th>Amount</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+          <tbody>
+            <% if @customer.customer_transactions.present? %>
+              <% @customer.customer_transactions.each do %>
+                <tr>
+                  <td><%= it.transaction_type.capitalize %></td>
+                  <td><%= number_to_currency it.amount, locale: :bn %></td>
+                  <td><%= it.date.strftime("%d/%m/%Y") %></td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+      </table>
+    </div>
+  </section>
+</div>

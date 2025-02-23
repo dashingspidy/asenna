@@ -1,4 +1,5 @@
 class Sale < ApplicationRecord
+  before_create :generate_sale_number
   has_many :sale_items, dependent: :destroy
   has_many :products, through: :sale_items
 
@@ -36,5 +37,12 @@ class Sale < ApplicationRecord
 
     change = ((current - previous) / previous.to_f) * 100
     change.positive? ? "#{change.round(1)}% more than last period" : "#{change.abs.round(1)}% less than last period"
+  end
+
+  def generate_sale_number
+    loop do
+      self.sale_number = rand(100000..999999).to_s
+      break unless Sale.exists?(sale_number: sale_number)
+    end
   end
 end

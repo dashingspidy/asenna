@@ -23,6 +23,11 @@
         <% end %>
       </li>
       <li>
+        <%= link_to customers_path, class: [ active_link(customers_path) ] do %>
+          <%= image_tag "users.svg", class: "menu-icon" %><span>Customer</span>
+        <% end %>
+      </li>
+      <li>
         <%= link_to brands_path, class: [ active_link(brands_path) ] do %>
           <%= image_tag "building-2.svg", class: "menu-icon" %><span>Brand</span>
         <% end %>
