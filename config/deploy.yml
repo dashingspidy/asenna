@@ -7,7 +7,7 @@ image: dashingspidy/asenna
 # Deploy to these servers.
 servers:
   web:
-    - 65.20.84.16
+    - [IP address]
   # job:
   #   hosts:
   #     - 192.168.0.1
@@ -19,7 +19,7 @@ servers:
 # Note: If using Cloudflare, set encryption mode in SSL/TLS setting to "Full" to enable CF-to-app encryption.
 proxy:
   ssl: true
-  host: app.upinput.online
+  host: [domain_name]
 
 # Credentials for your image host.
 registry:
@@ -78,7 +78,7 @@ builder:
   arch: amd64
 
   # # Build image via remote server (useful for faster amd64 builds on arm64 computers)
-  remote: ssh://root@65.20.84.16
+  # remote: ssh://[username]@[ip_address]
   #
   # # Pass arguments and secrets to the Docker build process
   # args:
